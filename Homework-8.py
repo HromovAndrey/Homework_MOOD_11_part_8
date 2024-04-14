@@ -1,23 +1,15 @@
-# Завдання 1
-#  Метаклас, який вносить додаткові перевірки/логіку
-# до певних методів у всіх класах.
-class ExtraChecksMeta(type):
+# Завдання 2
+#  Метаклас, що може змінювати ім'я класу залежно
+# від певних умов або параметрів.
+class DynamicClassNameMeta(type):
     def __new__(cls, name, bases, attrs):
-        for attr_name, attr_value in attrs.items():
-            if attr_name == "some_method":
-                attrs[attr_name] = cls.modify_method(attr_value)
-        return super().__new__(cls, name, bases, attrs)
+        if "dynamic_name" in attrs:
+            new_name = attrs["dynamic_name"]
+            del attrs["dynamic_name"]
+            return super().__new__(cls, new_name, bases, attrs)
+        else:
+            return super().__new__(cls, name, bases, attrs)
+class MyClass(metaclass=DynamicClassNameMeta):
+    dynamic_name = "NewClassName"
+print(MyClass.__name__)  # Виведе: NewClassName
 
-    @staticmethod
-    def modify_method(method):
-        def wrapper(*args, **kwargs):
-            print("Додаткова перевірка або логіка перед викликом методу")
-            result = method(*args, **kwargs)
-            return result
-        return wrapper
-
-class MyClass(metaclass=ExtraChecksMeta):
-    def some_method(self):
-        print("Оригінальний метод")
-obj = MyClass()
-obj.some_method()
