@@ -8,7 +8,6 @@ class AutoAttributeMeta(type):
         super().__init__(name, bases, attrs)
 class MyClass(metaclass=AutoAttributeMeta):
     pass
-print(MyClass.new_attribute)  # Виведе: This is a new attribute added automatically
-
+print(MyClass.new_attribute)
 
 
